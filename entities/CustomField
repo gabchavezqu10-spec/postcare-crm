@@ -1,0 +1,45 @@
+{
+  "name": "CustomField",
+  "type": "object",
+  "properties": {
+    "field_name": {
+      "type": "string",
+      "description": "Nombre del campo personalizado"
+    },
+    "field_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "number",
+        "date",
+        "boolean",
+        "dropdown",
+        "long_text"
+      ],
+      "description": "Tipo de campo"
+    },
+    "field_label": {
+      "type": "string",
+      "description": "Etiqueta visible del campo"
+    },
+    "dropdown_options": {
+      "type": "string",
+      "description": "Opciones para dropdown (JSON array)"
+    },
+    "is_required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si el campo es obligatorio"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Orden de visualizaci\u00f3n"
+    }
+  },
+  "required": [
+    "field_name",
+    "field_type",
+    "field_label"
+  ]
+}
