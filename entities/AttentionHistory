@@ -1,0 +1,49 @@
+{
+  "name": "AttentionHistory",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID del cliente"
+    },
+    "servicio_realizado": {
+      "type": "string",
+      "description": "Servicio realizado en esta atenci\u00f3n"
+    },
+    "sede": {
+      "type": "string",
+      "description": "Sede de la atenci\u00f3n"
+    },
+    "fecha_atencion": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de esta atenci\u00f3n"
+    },
+    "profesional": {
+      "type": "string",
+      "description": "Profesional que atendi\u00f3"
+    },
+    "numero_sesion": {
+      "type": "number",
+      "description": "N\u00famero de sesi\u00f3n"
+    },
+    "observaciones": {
+      "type": "string",
+      "description": "Observaciones de la sesi\u00f3n"
+    },
+    "estado_anterior": {
+      "type": "string",
+      "description": "Estado del cliente antes de esta atenci\u00f3n"
+    },
+    "estado_nuevo": {
+      "type": "string",
+      "description": "Estado del cliente despu\u00e9s de esta atenci\u00f3n"
+    }
+  },
+  "required": [
+    "client_id",
+    "servicio_realizado",
+    "sede",
+    "fecha_atencion"
+  ]
+}
