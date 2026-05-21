@@ -1,3 +1,4 @@
+import { clientApi } from '@/api/clientApi';
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { base44 } from "@/api/base44Client";
 import moment from "moment";
 
 const SEDES = ["Miraflores Country Club", "Santa Isabel", "Sullana"];
@@ -76,8 +76,8 @@ export default function ClientFormDialog({ open, onOpenChange, client, services,
     setCheckingDuplicate(true);
     try {
       const checks = [];
-      if (documento) checks.push(base44.entities.Client.filter({ documento }));
-      if (telefono) checks.push(base44.entities.Client.filter({ telefono }));
+      if (documento) checks.push(clientApi.filter({ documento }));
+      if (telefono) checks.push(clientApi.filter({ telefono }));
       
       const results = await Promise.all(checks);
       const found = results.flat().filter(c => c);
