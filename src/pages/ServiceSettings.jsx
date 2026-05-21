@@ -1,5 +1,5 @@
+import { serviceConfigApi } from '@/api/serviceConfigApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ export default function ServiceSettings() {
 
   const { data: services = [], isLoading } = useQuery({
     queryKey: ["services"],
-    queryFn: () => base44.entities.ServiceConfig.list("nombre_servicio"),
+    queryFn: () => serviceConfigApi.filter(),
   });
 
   const openNew = () => {
@@ -41,10 +41,10 @@ export default function ServiceSettings() {
   const handleSave = async () => {
     setSaving(true);
     if (editing) {
-      await base44.entities.ServiceConfig.update(editing.id, form);
+      await serviceConfigApi.update(editing.id, form);
       toast.success("Servicio actualizado");
     } else {
-      await base44.entities.ServiceConfig.create(form);
+      await serviceConfigApi.create(form);
       toast.success("Servicio creado");
     }
     setSaving(false);
@@ -53,7 +53,7 @@ export default function ServiceSettings() {
   };
 
   const handleDelete = async (service) => {
-    await base44.entities.ServiceConfig.delete(service.id);
+    await serviceConfigApi.delete(service.id);
     toast.success("Servicio eliminado");
     queryClient.invalidateQueries({ queryKey: ["services"] });
   };
