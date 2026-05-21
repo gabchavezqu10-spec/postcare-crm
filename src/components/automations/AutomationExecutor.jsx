@@ -1,5 +1,8 @@
+import { clientApi } from '@/api/clientApi';
+import { clientTimelineApi } from '@/api/clientTimelineApi';
+import { automationRuleApi } from '@/api/automationRuleApi';
+import { automationLogApi } from '@/api/automationLogApi';
 import React, { useEffect, useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,12 +17,12 @@ export default function AutomationExecutor() {
 
   const { data: rules = [] } = useQuery({
     queryKey: ["automationRules"],
-    queryFn: () => base44.entities.AutomationRule.list(),
+    queryFn: () => automationRuleApi.filter(),
   });
 
   const { data: clients = [] } = useQuery({
     queryKey: ["clients"],
-    queryFn: () => base44.entities.Client.list(),
+    queryFn: () => clientApi.filter(),
   });
 
   const executeAutomations = async () => {
@@ -39,7 +42,7 @@ export default function AutomationExecutor() {
             await executeAction(client, rule);
             totalExecutions++;
 
-            await base44.entities.AutomationRule.update(rule.id, {
+            await automationRuleApi.update(rule.id, {
               last_executed_at: new Date().toISOString(),
               execution_count: (rule.execution_count || 0) + 1,
             });
@@ -103,11 +106,11 @@ export default function AutomationExecutor() {
     try {
       switch (rule.action_type) {
         case "change_status":
-          await base44.entities.Client.update(client.id, {
+          await clientApi.update(client.id, {
             estado: rule.action_target,
           });
 
-          await base44.entities.ClientTimeline.create({
+          await clientTimelineApi.create({
             client_id: client.id,
             event_type: "estado_cambiado",
             event_title: "Estado cambiado por automatización",
@@ -123,7 +126,7 @@ export default function AutomationExecutor() {
           break;
       }
 
-      await base44.entities.AutomationLog.create({
+      await automationLogApi.create({
         client_id: client.id,
         rule_id: rule.id,
         rule_name: rule.rule_name,
@@ -134,7 +137,7 @@ export default function AutomationExecutor() {
         executed_at: new Date().toISOString(),
       });
     } catch (error) {
-      await base44.entities.AutomationLog.create({
+      await automationLogApi.create({
         client_id: client.id,
         rule_id: rule.id,
         rule_name: rule.rule_name,
