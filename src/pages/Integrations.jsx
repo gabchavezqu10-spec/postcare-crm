@@ -1,5 +1,5 @@
+import { clientApi } from '@/api/clientApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
@@ -20,12 +20,12 @@ export default function Integrations() {
 
   const { data: integrations = [], isLoading } = useQuery({
     queryKey: ["integrations"],
-    queryFn: () => base44.entities.Integration.list("-created_date"),
+    queryFn: () => integrationApi.filter(),
   });
 
   const { data: logs = [], isLoading: logsLoading } = useQuery({
     queryKey: ["integration-logs", historyIntegration?.id],
-    queryFn: () => base44.entities.IntegrationLog.filter({ integration_id: historyIntegration.id }, "-created_date", 50),
+    queryFn: () => integrationApiLog.filter({ integration_id: historyIntegration.id }, "-created_date", 50),
     enabled: !!historyIntegration,
   });
 
@@ -33,10 +33,10 @@ export default function Integrations() {
     setSaving(true);
     try {
       if (editingIntegration) {
-        await base44.entities.Integration.update(editingIntegration.id, data);
+        await integrationApi.update(editingIntegration.id, data);
         toast.success("Integración actualizada");
       } else {
-        await base44.entities.Integration.create(data);
+        await integrationApi.create(data);
         toast.success("Integración creada exitosamente");
       }
       setFormOpen(false);
@@ -51,7 +51,7 @@ export default function Integrations() {
 
   const handleToggle = async (integration, checked) => {
     try {
-      await base44.entities.Integration.update(integration.id, { activo: checked });
+      await integrationApi.update(integration.id, { activo: checked });
       toast.success(checked ? "Integración activada" : "Integración desactivada");
       queryClient.invalidateQueries({ queryKey: ["integrations"] });
     } catch (error) {
@@ -70,7 +70,7 @@ export default function Integrations() {
     }
 
     // Para webhooks salientes, buscar un cliente que cumpla la condición
-    const allClients = await base44.entities.Client.list("-created_date");
+    const allClients = await clientApi.filter();
     if (!allClients || allClients.length === 0) {
       toast.error("No hay clientes para probar");
       return;
@@ -115,7 +115,7 @@ export default function Integrations() {
     if (!window.confirm(`¿Eliminar integración "${integration.nombre}"?`)) return;
     
     try {
-      await base44.entities.Integration.delete(integration.id);
+      await integrationApi.delete(integration.id);
       toast.success("Integración eliminada");
       queryClient.invalidateQueries({ queryKey: ["integrations"] });
     } catch (error) {
