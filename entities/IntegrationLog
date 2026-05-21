@@ -1,0 +1,95 @@
+{
+  "name": "IntegrationLog",
+  "type": "object",
+  "properties": {
+    "integration_id": {
+      "type": "string",
+      "description": "ID de la integraci\u00f3n"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID del paciente"
+    },
+    "treatment_id": {
+      "type": "string",
+      "description": "ID del tratamiento (mismo que client_id)"
+    },
+    "evento": {
+      "type": "string",
+      "description": "Evento que dispar\u00f3 la ejecuci\u00f3n"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "saliente",
+        "entrante"
+      ],
+      "description": "Tipo de ejecuci\u00f3n"
+    },
+    "payload_enviado": {
+      "type": "string",
+      "description": "Payload completo enviado (JSON)"
+    },
+    "estado_envio": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "failed",
+        "retrying"
+      ],
+      "default": "pending",
+      "description": "Estado del env\u00edo"
+    },
+    "codigo_respuesta": {
+      "type": "number",
+      "description": "C\u00f3digo HTTP de respuesta"
+    },
+    "respuesta": {
+      "type": "string",
+      "description": "Respuesta completa recibida"
+    },
+    "fue_manual": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si fue ejecuci\u00f3n manual"
+    },
+    "hash_evento": {
+      "type": "string",
+      "description": "Hash \u00fanico para evitar duplicados"
+    },
+    "error_mensaje": {
+      "type": "string",
+      "description": "Mensaje de error si fall\u00f3"
+    },
+    "attempt_number": {
+      "type": "number",
+      "default": 1,
+      "description": "N\u00famero de intento de env\u00edo"
+    },
+    "http_status_code": {
+      "type": "number",
+      "description": "C\u00f3digo de estado HTTP (alias de codigo_respuesta)"
+    },
+    "response_received": {
+      "type": "string",
+      "description": "Respuesta recibida (alias de respuesta)"
+    },
+    "payload_sent": {
+      "type": "string",
+      "description": "Payload enviado (alias de payload_enviado)"
+    },
+    "send_status": {
+      "type": "string",
+      "description": "Estado del env\u00edo (alias de estado_envio)"
+    },
+    "manual_trigger": {
+      "type": "boolean",
+      "description": "Disparador manual (alias de fue_manual)"
+    }
+  },
+  "required": [
+    "integration_id",
+    "evento"
+  ]
+}
