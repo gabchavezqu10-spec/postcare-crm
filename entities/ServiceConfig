@@ -1,0 +1,23 @@
+{
+  "name": "ServiceConfig",
+  "type": "object",
+  "properties": {
+    "nombre_servicio": {
+      "type": "string",
+      "description": "Nombre del servicio o tratamiento"
+    },
+    "dias_para_proxima_sesion": {
+      "type": "number",
+      "description": "D\u00edas estimados entre sesiones"
+    },
+    "sesiones_sugeridas": {
+      "type": "number",
+      "description": "N\u00famero de sesiones sugeridas para completar el tratamiento"
+    }
+  },
+  "required": [
+    "nombre_servicio",
+    "dias_para_proxima_sesion",
+    "sesiones_sugeridas"
+  ]
+}
