@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient';
 const TABLE = 'client_next_actions';
-export const clientNextActionsApi = {
+export const clientNextActionApi = {
   async filter(filters = {}) {
     let q = supabase.from(TABLE).select('*');
     Object.entries(filters).forEach(([k, v]) => { q = q.eq(k, v); });
