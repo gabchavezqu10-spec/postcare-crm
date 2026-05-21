@@ -1,5 +1,5 @@
+import { automationRuleApi } from '@/api/automationRuleApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -53,9 +53,9 @@ export default function AutomationRuleDialog({ rule, onClose }) {
       delete payload.conditions;
 
       if (rule) {
-        return base44.entities.AutomationRule.update(rule.id, payload);
+        return automationRuleApi.update(rule.id, payload);
       } else {
-        return base44.entities.AutomationRule.create(payload);
+        return automationRuleApi.create(payload);
       }
     },
     onSuccess: () => {
