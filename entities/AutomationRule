@@ -1,0 +1,49 @@
+{
+  "name": "AutomationRule",
+  "type": "object",
+  "properties": {
+    "rule_name": {
+      "type": "string",
+      "description": "Nombre de la regla de automatizaci\u00f3n"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si la regla est\u00e1 activa"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "change_status",
+        "send_webhook",
+        "send_telegram",
+        "add_tag"
+      ],
+      "description": "Tipo de acci\u00f3n a ejecutar"
+    },
+    "action_target": {
+      "type": "string",
+      "description": "Objetivo de la acci\u00f3n (estado, webhook, canal telegram, tag)"
+    },
+    "conditions_json": {
+      "type": "string",
+      "description": "Condiciones en formato JSON array"
+    },
+    "last_executed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u00daltima ejecuci\u00f3n de la regla"
+    },
+    "execution_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Contador de ejecuciones"
+    }
+  },
+  "required": [
+    "rule_name",
+    "action_type",
+    "action_target",
+    "conditions_json"
+  ]
+}
