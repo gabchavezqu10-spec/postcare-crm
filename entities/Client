@@ -1,0 +1,120 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string",
+      "description": "Nombre del cliente"
+    },
+    "apellido": {
+      "type": "string",
+      "description": "Apellido del cliente"
+    },
+    "documento": {
+      "type": "string",
+      "description": "DNI o Carnet de Extranjer\u00eda"
+    },
+    "telefono": {
+      "type": "string",
+      "description": "Tel\u00e9fono del cliente"
+    },
+    "servicio_realizado": {
+      "type": "string",
+      "description": "Servicio o tratamiento realizado"
+    },
+    "sede": {
+      "type": "string",
+      "description": "Sede donde fue atendido"
+    },
+    "fecha_atencion": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de la \u00faltima atenci\u00f3n"
+    },
+    "fecha_proxima_sesion": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha calculada para la pr\u00f3xima sesi\u00f3n"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "Atendido",
+        "Pr\u00f3xima sesi\u00f3n agendada",
+        "Requiere nueva sesi\u00f3n",
+        "En seguimiento",
+        "Tratamiento finalizado",
+        "No continu\u00f3"
+      ],
+      "default": "Atendido",
+      "description": "Estado comercial del cliente"
+    },
+    "observaciones": {
+      "type": "string",
+      "description": "Notas u observaciones generales"
+    },
+    "profesional": {
+      "type": "string",
+      "description": "Profesional que atendi\u00f3"
+    },
+    "numero_sesion_actual": {
+      "type": "number",
+      "default": 1,
+      "description": "N\u00famero de sesi\u00f3n actual"
+    },
+    "total_sesiones_sugeridas": {
+      "type": "number",
+      "description": "Total de sesiones sugeridas para el tratamiento"
+    },
+    "dias_vencido": {
+      "type": "number",
+      "description": "D\u00edas de vencimiento desde fecha_proxima_sesion"
+    },
+    "nivel_vencimiento": {
+      "type": "string",
+      "enum": [
+        "green",
+        "orange",
+        "red"
+      ],
+      "description": "Nivel de vencimiento: green (0-3), orange (4-10), red (11+)"
+    },
+    "webhook_status": {
+      "type": "string",
+      "enum": [
+        "",
+        "pending",
+        "scheduled",
+        "sent",
+        "failed"
+      ],
+      "default": "",
+      "description": "Estado del webhook de automatizaci\u00f3n"
+    },
+    "fecha_registro": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de registro inicial del paciente"
+    },
+    "profile_photo": {
+      "type": "string",
+      "description": "URL de la foto de perfil"
+    },
+    "short_summary": {
+      "type": "string",
+      "description": "Resumen breve del cliente"
+    },
+    "custom_fields_json": {
+      "type": "string",
+      "description": "Campos personalizados en formato JSON"
+    }
+  },
+  "required": [
+    "nombre",
+    "apellido",
+    "telefono",
+    "servicio_realizado",
+    "sede",
+    "fecha_atencion"
+  ]
+}
