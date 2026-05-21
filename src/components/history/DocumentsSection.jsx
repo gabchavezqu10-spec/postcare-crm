@@ -1,5 +1,6 @@
+import { clientDocumentApi } from '@/api/clientDocumentApi';
+import { clientTimelineApi } from '@/api/clientTimelineApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ export default function DocumentsSection({ client, documents }) {
       const fileType = file.type.includes("pdf") ? "PDF" : 
                        file.type.includes("image") ? "Imagen" : "Documento";
       
-      await base44.entities.ClientDocument.create({
+      await clientDocumentApi.create({
         client_id: client.id,
         file_name: file.name,
         file_url: file_url,
@@ -26,7 +27,7 @@ export default function DocumentsSection({ client, documents }) {
         uploaded_by: (await base44.auth.me()).email,
       });
 
-      await base44.entities.ClientTimeline.create({
+      await clientTimelineApi.create({
         client_id: client.id,
         event_type: "documento_subido",
         event_title: "Documento subido",
@@ -47,7 +48,7 @@ export default function DocumentsSection({ client, documents }) {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.ClientDocument.delete(id),
+    mutationFn: (id) => clientDocumentApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["documents", client.id] });
       toast.success("Documento eliminado");
