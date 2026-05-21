@@ -1,0 +1,96 @@
+{
+  "name": "Integration",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string",
+      "description": "Nombre de la integraci\u00f3n"
+    },
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n opcional"
+    },
+    "tipo_integracion": {
+      "type": "string",
+      "enum": [
+        "saliente",
+        "entrante"
+      ],
+      "default": "saliente",
+      "description": "Tipo de webhook"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si la integraci\u00f3n est\u00e1 activa"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL del webhook (para salientes)"
+    },
+    "metodo_http": {
+      "type": "string",
+      "enum": [
+        "POST",
+        "GET"
+      ],
+      "default": "POST",
+      "description": "M\u00e9todo HTTP"
+    },
+    "evento_disparador": {
+      "type": "string",
+      "enum": [
+        "lead_registrado",
+        "lead_actualizado",
+        "nueva_sesion_registrada",
+        "cambio_de_estado",
+        "requiere_nueva_sesion",
+        "en_seguimiento"
+      ],
+      "description": "Evento que dispara el webhook saliente"
+    },
+    "condicion_json": {
+      "type": "string",
+      "description": "Condici\u00f3n adicional en formato JSON"
+    },
+    "headers_personalizados": {
+      "type": "string",
+      "description": "Headers adicionales en formato JSON"
+    },
+    "secret_token": {
+      "type": "string",
+      "description": "Token secreto para webhooks entrantes"
+    },
+    "campo_identificador": {
+      "type": "string",
+      "enum": [
+        "id",
+        "telefono",
+        "documento"
+      ],
+      "default": "telefono",
+      "description": "Campo para identificar el lead en webhooks entrantes"
+    },
+    "campos_permitidos": {
+      "type": "string",
+      "description": "Campos que pueden actualizarse v\u00eda webhook entrante (JSON array)"
+    },
+    "ultima_ejecucion": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de \u00faltima ejecuci\u00f3n"
+    },
+    "ultimo_estado": {
+      "type": "string",
+      "description": "Estado de \u00faltima ejecuci\u00f3n"
+    },
+    "ultima_respuesta": {
+      "type": "string",
+      "description": "Respuesta de \u00faltima ejecuci\u00f3n"
+    }
+  },
+  "required": [
+    "nombre",
+    "tipo_integracion"
+  ]
+}
