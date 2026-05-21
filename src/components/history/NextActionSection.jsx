@@ -1,5 +1,5 @@
+import { clientNextActionApi } from '@/api/clientNextActionApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export default function NextActionSection({ client, nextActions }) {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.ClientNextAction.create({
+    mutationFn: (data) => clientNextActionApi.create({
       ...data,
       client_id: client.id,
     }),
@@ -40,7 +40,7 @@ export default function NextActionSection({ client, nextActions }) {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }) => base44.entities.ClientNextAction.update(id, { status }),
+    mutationFn: ({ id, status }) => clientNextActionApi.update(id, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nextActions", client.id] });
       toast.success("Estado actualizado");
@@ -48,7 +48,7 @@ export default function NextActionSection({ client, nextActions }) {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.ClientNextAction.delete(id),
+    mutationFn: (id) => clientNextActionApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nextActions", client.id] });
       toast.success("Acción eliminada");
