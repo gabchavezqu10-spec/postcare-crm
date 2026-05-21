@@ -1,4 +1,4 @@
-import { base44 } from "@/api/base44Client";
+import { clientApi } from '@/api/clientApi';
 import moment from "moment";
 
 /**
@@ -92,7 +92,7 @@ export function generateEventHash(integrationId, clientId, event) {
  */
 export async function isDuplicate(integrationId, clientId, event) {
   const hash = generateEventHash(integrationId, clientId, event);
-  const logs = await base44.entities.IntegrationLog.filter({ 
+  const logs = await integrationApiLog.filter({ 
     integration_id: integrationId,
     client_id: clientId,
     hash_evento: hash,
@@ -107,7 +107,7 @@ export async function isDuplicate(integrationId, clientId, event) {
 export async function sendWebhook(integration, client, isManual = false, attemptNumber = 1) {
   try {
     // Consultar cliente actualizado en tiempo real
-    const freshClient = await base44.entities.Client.filter({ id: client.id });
+    const freshClient = await clientApi.filter({ id: client.id });
     if (!freshClient || freshClient.length === 0) {
       throw new Error("Cliente no encontrado");
     }
@@ -156,7 +156,7 @@ export async function sendWebhook(integration, client, isManual = false, attempt
     const success = response.ok;
 
     // Registrar log
-    await base44.entities.IntegrationLog.create({
+    await integrationApiLog.create({
       integration_id: integration.id,
       client_id: currentClient.id,
       treatment_id: currentClient.id,
@@ -186,11 +186,11 @@ export async function sendWebhook(integration, client, isManual = false, attempt
     // Actualizar webhook_status en el cliente
     if (!isManual) {
       const finalStatus = success ? "sent" : (attemptNumber >= 3 ? "failed" : "retrying");
-      await base44.entities.Client.update(currentClient.id, { webhook_status: finalStatus });
+      await clientApi.update(currentClient.id, { webhook_status: finalStatus });
     }
 
     // Actualizar integración
-    await base44.entities.Integration.update(integration.id, {
+    await integrationApi.update(integration.id, {
       ultima_ejecucion: moment().toISOString(),
       ultimo_estado: success ? "exitoso" : "fallido",
       ultima_respuesta: responseText.substring(0, 500),
@@ -199,7 +199,7 @@ export async function sendWebhook(integration, client, isManual = false, attempt
     return { success, status: response.status, message: responseText };
   } catch (error) {
     // Registrar error
-    await base44.entities.IntegrationLog.create({
+    await integrationApiLog.create({
       integration_id: integration.id,
       client_id: client.id,
       treatment_id: client.id,
@@ -222,7 +222,7 @@ export async function sendWebhook(integration, client, isManual = false, attempt
 
     // Actualizar webhook_status en el cliente
     if (!isManual) {
-      await base44.entities.Client.update(client.id, { webhook_status: "failed" });
+      await clientApi.update(client.id, { webhook_status: "failed" });
     }
 
     return { success: false, message: error.message };
@@ -234,7 +234,7 @@ export async function sendWebhook(integration, client, isManual = false, attempt
  */
 export async function triggerWebhooksForClient(client, event) {
   // Buscar integraciones activas que coincidan con el evento
-  const integrations = await base44.entities.Integration.filter({
+  const integrations = await integrationApi.filter({
     activo: true,
     tipo_integracion: "saliente",
     evento_disparador: event,
@@ -252,7 +252,7 @@ export async function triggerWebhooksForClient(client, event) {
 export async function processIncomingWebhook(integrationId, token, data) {
   try {
     // Buscar integración
-    const integrations = await base44.entities.Integration.filter({ id: integrationId });
+    const integrations = await integrationApi.filter({ id: integrationId });
     if (!integrations || integrations.length === 0) {
       return { success: false, message: "Integración no encontrada" };
     }
@@ -269,7 +269,7 @@ export async function processIncomingWebhook(integrationId, token, data) {
       return { success: false, message: "Identificador no proporcionado" };
     }
 
-    const clients = await base44.entities.Client.filter({
+    const clients = await clientApi.filter({
       [integration.campo_identificador]: identificador,
     });
 
@@ -300,10 +300,10 @@ export async function processIncomingWebhook(integrationId, token, data) {
     }
 
     // Actualizar cliente
-    await base44.entities.Client.update(client.id, updateData);
+    await clientApi.update(client.id, updateData);
 
     // Registrar log
-    await base44.entities.IntegrationLog.create({
+    await integrationApiLog.create({
       integration_id: integration.id,
       client_id: client.id,
       treatment_id: client.id,
