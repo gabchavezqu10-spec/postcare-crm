@@ -1,5 +1,8 @@
+import { clientApi } from '@/api/clientApi';
+import { clientDocumentApi } from '@/api/clientDocumentApi';
+import { clientTimelineApi } from '@/api/clientTimelineApi';
+import { clientNextActionApi } from '@/api/clientNextActionApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,17 +22,17 @@ export default function ClientProfileView({ client, onBack }) {
 
   const { data: timeline = [] } = useQuery({
     queryKey: ["timeline", client.id],
-    queryFn: () => base44.entities.ClientTimeline.filter({ client_id: client.id }, "-event_date"),
+    queryFn: () => clientTimelineApi.filter({ client_id: client.id }, "-event_date"),
   });
 
   const { data: documents = [] } = useQuery({
     queryKey: ["documents", client.id],
-    queryFn: () => base44.entities.ClientDocument.filter({ client_id: client.id }, "-created_date"),
+    queryFn: () => clientDocumentApi.filter({ client_id: client.id }, "-created_date"),
   });
 
   const { data: nextActions = [] } = useQuery({
     queryKey: ["nextActions", client.id],
-    queryFn: () => base44.entities.ClientNextAction.filter({ client_id: client.id }, "action_date"),
+    queryFn: () => clientNextActionApi.filter({ client_id: client.id }, "action_date"),
   });
 
 
@@ -37,7 +40,7 @@ export default function ClientProfileView({ client, onBack }) {
   const uploadPhotoMutation = useMutation({
     mutationFn: async (file) => {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      await base44.entities.Client.update(client.id, { profile_photo: file_url });
+      await clientApi.update(client.id, { profile_photo: file_url });
       return file_url;
     },
     onSuccess: () => {
