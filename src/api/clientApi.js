@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient';
 const TABLE = 'clients';
-export const clientsApi = {
+export const clientApi = {
   async filter(filters = {}) {
     let q = supabase.from(TABLE).select('*');
     Object.entries(filters).forEach(([k, v]) => { q = q.eq(k, v); });
