@@ -1,0 +1,45 @@
+{
+  "name": "ClientNextAction",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID del cliente"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "Pr\u00f3ximo Pago",
+        "Pr\u00f3xima Cita",
+        "Seguimiento",
+        "Renovaci\u00f3n",
+        "Otro"
+      ],
+      "description": "Tipo de acci\u00f3n"
+    },
+    "action_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de la acci\u00f3n"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notas sobre la acci\u00f3n"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pendiente",
+        "Completada",
+        "Cancelada"
+      ],
+      "default": "Pendiente",
+      "description": "Estado de la acci\u00f3n"
+    }
+  },
+  "required": [
+    "client_id",
+    "action_type",
+    "action_date"
+  ]
+}
