@@ -1,0 +1,55 @@
+{
+  "name": "AutomationLog",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID del cliente afectado"
+    },
+    "rule_id": {
+      "type": "string",
+      "description": "ID de la regla ejecutada"
+    },
+    "rule_name": {
+      "type": "string",
+      "description": "Nombre de la regla ejecutada"
+    },
+    "action_type": {
+      "type": "string",
+      "description": "Tipo de acci\u00f3n ejecutada"
+    },
+    "action_target": {
+      "type": "string",
+      "description": "Objetivo de la acci\u00f3n"
+    },
+    "condition_snapshot": {
+      "type": "string",
+      "description": "Snapshot de las condiciones evaluadas (JSON)"
+    },
+    "execution_result": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failed",
+        "skipped"
+      ],
+      "description": "Resultado de la ejecuci\u00f3n"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Mensaje de error si fall\u00f3"
+    },
+    "executed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de ejecuci\u00f3n"
+    }
+  },
+  "required": [
+    "client_id",
+    "rule_id",
+    "rule_name",
+    "action_type",
+    "execution_result"
+  ]
+}
