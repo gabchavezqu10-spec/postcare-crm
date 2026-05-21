@@ -1,5 +1,6 @@
+import { clientApi } from '@/api/clientApi';
+import { attentionHistoryApi } from '@/api/attentionHistoryApi';
 import React, { useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -49,12 +50,12 @@ export default function Metrics() {
 
   const { data: clients = [], isLoading: clientsLoading } = useQuery({
     queryKey: ["clients"],
-    queryFn: () => base44.entities.Client.list("-created_date"),
+    queryFn: () => clientApi.filter(),
   });
 
   const { data: attentionHistory = [], isLoading: historyLoading } = useQuery({
     queryKey: ["attention-history"],
-    queryFn: () => base44.entities.AttentionHistory.list("-fecha_atencion"),
+    queryFn: () => attentionHistoryApi.filter(),
   });
 
   const isLoading = clientsLoading || historyLoading;
