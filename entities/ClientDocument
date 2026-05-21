@@ -1,0 +1,35 @@
+{
+  "name": "ClientDocument",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID del cliente"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Nombre del archivo"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL del archivo subido"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "Tipo de archivo (PDF, imagen, etc)"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Usuario que subi\u00f3 el archivo"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notas sobre el documento"
+    }
+  },
+  "required": [
+    "client_id",
+    "file_name",
+    "file_url"
+  ]
+}
