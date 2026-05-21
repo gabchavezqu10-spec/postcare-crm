@@ -1,5 +1,5 @@
+import { clientApi } from '@/api/clientApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,17 +13,17 @@ export default function IntegrationHistoryView() {
 
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ["integration-logs-all"],
-    queryFn: () => base44.entities.IntegrationLog.list("-created_date", 100),
+    queryFn: () => integrationApiLog.filter(),
   });
 
   const { data: integrations = [] } = useQuery({
     queryKey: ["integrations"],
-    queryFn: () => base44.entities.Integration.list(),
+    queryFn: () => integrationApi.filter(),
   });
 
   const { data: clients = [] } = useQuery({
     queryKey: ["clients"],
-    queryFn: () => base44.entities.Client.list(),
+    queryFn: () => clientApi.filter(),
   });
 
   const getIntegrationName = (id) => {
