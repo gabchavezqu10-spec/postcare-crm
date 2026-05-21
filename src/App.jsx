@@ -58,7 +58,8 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="*" element={<PageNotFound />} />
-    </Routes>
+      <Route path="/portal-paciente" element={<PatientPortal />} />
+        </Routes>
   );
 };
 
