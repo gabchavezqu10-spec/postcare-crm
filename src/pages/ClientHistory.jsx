@@ -1,5 +1,5 @@
+import { clientApi } from '@/api/clientApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Search, User, Loader2 } from "lucide-react";
@@ -15,7 +15,7 @@ export default function ClientHistory() {
 
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ["clients"],
-    queryFn: () => base44.entities.Client.list("-created_date"),
+    queryFn: () => clientApi.filter(),
   });
 
   const filteredClients = clients.filter(c => {
