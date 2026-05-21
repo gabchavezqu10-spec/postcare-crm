@@ -1,0 +1,52 @@
+{
+  "name": "ClientTimeline",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID del cliente"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "registro_cliente",
+        "tratamiento_agregado",
+        "sesion_registrada",
+        "pago_registrado",
+        "cita_agendada",
+        "documento_subido",
+        "nota_agregada",
+        "estado_cambiado",
+        "otro"
+      ],
+      "description": "Tipo de evento"
+    },
+    "event_title": {
+      "type": "string",
+      "description": "T\u00edtulo del evento"
+    },
+    "event_description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del evento"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha del evento"
+    },
+    "related_entity_type": {
+      "type": "string",
+      "description": "Tipo de entidad relacionada (opcional)"
+    },
+    "related_entity_id": {
+      "type": "string",
+      "description": "ID de entidad relacionada (opcional)"
+    }
+  },
+  "required": [
+    "client_id",
+    "event_type",
+    "event_title",
+    "event_date"
+  ]
+}
