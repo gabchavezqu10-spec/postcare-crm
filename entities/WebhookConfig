@@ -1,0 +1,51 @@
+{
+  "name": "WebhookConfig",
+  "type": "object",
+  "properties": {
+    "webhook_url": {
+      "type": "string",
+      "description": "URL del webhook destino"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si la integraci\u00f3n est\u00e1 activa"
+    },
+    "evento_disparador": {
+      "type": "string",
+      "enum": [
+        "requiere_nueva_sesion",
+        "cliente_registrado",
+        "cliente_actualizado",
+        "nueva_sesion_registrada",
+        "cambio_de_estado"
+      ],
+      "default": "requiere_nueva_sesion",
+      "description": "Evento que dispara el webhook"
+    },
+    "metodo_http": {
+      "type": "string",
+      "enum": [
+        "POST",
+        "PUT"
+      ],
+      "default": "POST",
+      "description": "M\u00e9todo HTTP"
+    },
+    "formato_envio": {
+      "type": "string",
+      "enum": [
+        "JSON"
+      ],
+      "default": "JSON",
+      "description": "Formato de env\u00edo"
+    },
+    "headers_personalizados": {
+      "type": "string",
+      "description": "Headers adicionales en formato JSON (opcional)"
+    }
+  },
+  "required": [
+    "webhook_url"
+  ]
+}
