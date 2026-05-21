@@ -1,0 +1,57 @@
+{
+  "name": "AutomationQueue",
+  "type": "object",
+  "properties": {
+    "patient_id": {
+      "type": "string",
+      "description": "ID del paciente"
+    },
+    "treatment_id": {
+      "type": "string",
+      "description": "ID del tratamiento (mismo que patient_id)"
+    },
+    "integration_id": {
+      "type": "string",
+      "description": "ID de la integraci\u00f3n a ejecutar"
+    },
+    "event": {
+      "type": "string",
+      "description": "Evento disparador"
+    },
+    "queue_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "scheduled",
+        "executed",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Estado en la cola"
+    },
+    "scheduled_for": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha programada de ejecuci\u00f3n"
+    },
+    "executed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de ejecuci\u00f3n real"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Mensaje de error si fall\u00f3"
+    },
+    "retry_count": {
+      "type": "number",
+      "default": 0,
+      "description": "N\u00famero de reintentos realizados"
+    }
+  },
+  "required": [
+    "patient_id",
+    "integration_id",
+    "event"
+  ]
+}
