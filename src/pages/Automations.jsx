@@ -1,5 +1,5 @@
+import { automationRuleApi } from '@/api/automationRuleApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,12 +18,12 @@ export default function Automations() {
 
   const { data: rules = [] } = useQuery({
     queryKey: ["automationRules"],
-    queryFn: () => base44.entities.AutomationRule.list("-created_date"),
+    queryFn: () => automationRuleApi.filter(),
   });
 
   const toggleActiveMutation = useMutation({
     mutationFn: ({ id, is_active }) => 
-      base44.entities.AutomationRule.update(id, { is_active }),
+      automationRuleApi.update(id, { is_active }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["automationRules"] });
       toast.success("Estado actualizado");
@@ -31,7 +31,7 @@ export default function Automations() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.AutomationRule.delete(id),
+    mutationFn: (id) => automationRuleApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["automationRules"] });
       toast.success("Regla eliminada");
