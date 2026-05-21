@@ -1,5 +1,7 @@
+import { serviceConfigApi } from '@/api/serviceConfigApi';
+import { clientApi } from '@/api/clientApi';
+import { attentionHistoryApi } from '@/api/attentionHistoryApi';
 import React, { useState, useEffect, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { UserPlus, Loader2, X, TrendingUp } from "lucide-react";
@@ -34,19 +36,19 @@ export default function Clients() {
 
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ["clients"],
-    queryFn: () => base44.entities.Client.list("-created_date"),
+    queryFn: () => clientApi.filter(),
   });
 
   const { data: services = [] } = useQuery({
     queryKey: ["services"],
-    queryFn: () => base44.entities.ServiceConfig.list(),
+    queryFn: () => serviceConfigApi.filter(),
   });
 
 
 
   const { data: history = [], isLoading: historyLoading } = useQuery({
     queryKey: ["history", historyClient?.id],
-    queryFn: () => base44.entities.AttentionHistory.filter({ client_id: historyClient.id }, "-fecha_atencion"),
+    queryFn: () => attentionHistoryApi.filter({ client_id: historyClient.id }, "-fecha_atencion"),
     enabled: !!historyClient,
   });
 
@@ -173,11 +175,11 @@ export default function Clients() {
   const handleSaveClient = async (data) => {
     setSaving(true);
     if (editingClient) {
-      await base44.entities.Client.update(editingClient.id, data);
+      await clientApi.update(editingClient.id, data);
       await triggerWebhooksForClient({ ...editingClient, ...data }, "lead_actualizado");
       toast.success("Cliente actualizado");
     } else {
-      const created = await base44.entities.Client.create(data);
+      const created = await clientApi.create(data);
       await triggerWebhooksForClient({ ...data, id: created?.id }, "lead_registrado");
       toast.success("Cliente registrado exitosamente");
     }
@@ -196,7 +198,7 @@ export default function Clients() {
     const newSession = (client.numero_sesion_actual || 1) + 1;
     const nextDate = moment(form.fecha_atencion).add(dias, "days").format("YYYY-MM-DD");
 
-    await base44.entities.AttentionHistory.create({
+    await attentionHistoryApi.create({
       client_id: client.id,
       servicio_realizado: form.servicio_realizado,
       sede: form.sede,
@@ -227,7 +229,7 @@ export default function Clients() {
       nivel_vencimiento: nivelVencimiento,
     };
 
-    await base44.entities.Client.update(client.id, updatedClient);
+    await clientApi.update(client.id, updatedClient);
     await triggerWebhooksForClient({ ...client, ...updatedClient }, "nueva_sesion_registrada");
     setSaving(false);
     setAttentionOpen(false);
@@ -245,7 +247,7 @@ export default function Clients() {
         setFormOpen(true);
         break;
       case "agendar":
-        await base44.entities.Client.update(client.id, { estado: "Próxima sesión agendada" });
+        await clientApi.update(client.id, { estado: "Próxima sesión agendada" });
         await triggerWebhooksForClient({ ...client, estado: "Próxima sesión agendada" }, "cambio_de_estado");
         toast.success("Estado actualizado a 'Próxima sesión agendada'");
         queryClient.invalidateQueries({ queryKey: ["clients"] });
@@ -260,26 +262,26 @@ export default function Clients() {
         break;
 
       case "finalizar":
-        await base44.entities.Client.update(client.id, { estado: "Tratamiento finalizado" });
+        await clientApi.update(client.id, { estado: "Tratamiento finalizado" });
         await triggerWebhooksForClient({ ...client, estado: "Tratamiento finalizado" }, "cambio_de_estado");
         toast.success("Tratamiento finalizado");
         queryClient.invalidateQueries({ queryKey: ["clients"] });
         break;
       case "no_continuo":
-        await base44.entities.Client.update(client.id, { estado: "No continuó" });
+        await clientApi.update(client.id, { estado: "No continuó" });
         await triggerWebhooksForClient({ ...client, estado: "No continuó" }, "cambio_de_estado");
         toast.success("Estado actualizado");
         queryClient.invalidateQueries({ queryKey: ["clients"] });
         break;
       case "eliminar":
         if (window.confirm(`¿Eliminar a ${client.nombre} ${client.apellido}? Esta acción no se puede deshacer.`)) {
-          await base44.entities.Client.delete(client.id);
+          await clientApi.delete(client.id);
           toast.success("Cliente eliminado");
           queryClient.invalidateQueries({ queryKey: ["clients"] });
         }
         break;
       case "cambiar_estado":
-        await base44.entities.Client.update(client.id, { estado: extra });
+        await clientApi.update(client.id, { estado: extra });
         await triggerWebhooksForClient({ ...client, estado: extra }, "cambio_de_estado");
         if (extra === "En seguimiento") {
           await triggerWebhooksForClient({ ...client, estado: extra }, "en_seguimiento");
