@@ -1,5 +1,5 @@
+import { clientApi } from '@/api/clientApi';
 import React, { useMemo } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import StatCard from "../components/crm/StatCard";
 import { Users, AlertTriangle, CalendarClock, CheckCircle2, XCircle, Clock } from "lucide-react";
@@ -11,7 +11,7 @@ import { createPageUrl } from "@/utils";
 export default function Dashboard() {
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ["clients"],
-    queryFn: () => base44.entities.Client.list("-created_date"),
+    queryFn: () => clientApi.filter(),
   });
 
   const stats = React.useMemo(() => {
