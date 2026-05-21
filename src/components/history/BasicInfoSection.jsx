@@ -1,5 +1,5 @@
+import { clientApi } from '@/api/clientApi';
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ export default function BasicInfoSection({ client }) {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.Client.update(client.id, data),
+    mutationFn: (data) => clientApi.update(client.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
       setEditing(false);
