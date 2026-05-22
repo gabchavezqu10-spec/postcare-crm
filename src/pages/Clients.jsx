@@ -58,7 +58,7 @@ export default function Clients() {
   const filteredClients = useMemo(() => {
     let result = clients;
 
-    // Aplicar filtro de métrica si existe
+    // Aplicar filtro de mÃ©trica si existe
     if (metricFilter) {
       const today = moment().startOf("day");
       const start = startDate ? moment(startDate) : null;
@@ -68,7 +68,7 @@ export default function Clients() {
         case "requieren_hoy":
           result = result.filter(c => {
             const fechaProxima = c.fecha_proxima_sesion ? moment(c.fecha_proxima_sesion).startOf("day") : null;
-            return (fechaProxima && fechaProxima.isSame(today, "day")) || c.estado === "Requiere nueva sesión";
+            return (fechaProxima && fechaProxima.isSame(today, "day")) || c.estado === "Requiere nueva sesiÃ³n";
           });
           break;
 
@@ -91,11 +91,11 @@ export default function Clients() {
             const sesionesCompletadas = c.numero_sesion_actual || 1;
             const fechaProxima = c.fecha_proxima_sesion ? moment(c.fecha_proxima_sesion).startOf("day") : null;
             
-            // Filtrar por período
+            // Filtrar por perÃ­odo
             const enPeriodo = fechaRegistro && start && end && 
               moment(fechaRegistro).isBetween(start, end, "day", "[]");
             
-            // Es evaluable si tiene >= 2 sesiones o fecha próxima vencida
+            // Es evaluable si tiene >= 2 sesiones o fecha prÃ³xima vencida
             const esEvaluable = sesionesCompletadas >= 2 || (fechaProxima && fechaProxima.isBefore(today, "day"));
             
             return enPeriodo && sesionesCompletadas >= 2;
@@ -107,7 +107,7 @@ export default function Clients() {
             const fechaRegistro = c.fecha_registro || c.created_date;
             const enPeriodo = fechaRegistro && start && end && 
               moment(fechaRegistro).isBetween(start, end, "day", "[]");
-            return enPeriodo && c.estado === "No continuó";
+            return enPeriodo && c.estado === "No continuÃ³";
           });
           break;
 
@@ -134,10 +134,10 @@ export default function Clients() {
       // Manejo del filtro de estado con "Vencido"
       if (filters.estado !== "all") {
         if (filters.estado === "Vencido") {
-          // Verificar si está vencido (más de 3 días)
+          // Verificar si estÃ¡ vencido (mÃ¡s de 3 dÃ­as)
           const isVencido = c.fecha_proxima_sesion && 
             moment().diff(moment(c.fecha_proxima_sesion), "days") > 3 &&
-            !["Tratamiento finalizado", "No continuó"].includes(c.estado);
+            !["Tratamiento finalizado", "No continuÃ³"].includes(c.estado);
           if (!isVencido) return false;
         } else {
           // Verificar estado normal
@@ -149,7 +149,7 @@ export default function Clients() {
       if (filters.fechaProxima && c.fecha_proxima_sesion !== filters.fechaProxima) return false;
       if (filters.vencidos) {
         const overdue = c.fecha_proxima_sesion && moment(c.fecha_proxima_sesion).isBefore(moment(), "day") &&
-          !["Tratamiento finalizado", "No continuó"].includes(c.estado);
+          !["Tratamiento finalizado", "No continuÃ³"].includes(c.estado);
         if (!overdue) return false;
       }
       return true;
@@ -158,12 +158,12 @@ export default function Clients() {
 
   const getMetricLabel = () => {
     const labels = {
-      requieren_hoy: "Requieren Sesión Hoy",
+      requieren_hoy: "Requieren SesiÃ³n Hoy",
       seguimiento: "En Seguimiento",
       atendidos_semana: "Atendidos Esta Semana",
       continuidad: "Tasa de Continuidad",
       abandono: "Tasa de Abandono",
-      finalizacion: "Tasa de Finalización",
+      finalizacion: "Tasa de FinalizaciÃ³n",
     };
     return labels[metricFilter] || "";
   };
@@ -174,19 +174,24 @@ export default function Clients() {
 
   const handleSaveClient = async (data) => {
     setSaving(true);
-    if (editingClient) {
-      await clientApi.update(editingClient.id, data);
-      await triggerWebhooksForClient({ ...editingClient, ...data }, "lead_actualizado");
-      toast.success("Cliente actualizado");
-    } else {
-      const created = await clientApi.create(data);
-      await triggerWebhooksForClient({ ...data, id: created?.id }, "lead_registrado");
-      toast.success("Cliente registrado exitosamente");
+    try {
+      if (editingClient) {
+        await clientApi.update(editingClient.id, data);
+        try { await triggerWebhooksForClient({ ...editingClient, ...data }, "lead_actualizado"); } catch(e) {}
+        toast.success("Cliente actualizado");
+      } else {
+        const created = await clientApi.create(data);
+        try { await triggerWebhooksForClient({ ...data, id: created?.id }, "lead_registrado"); } catch(e) {}
+        toast.success("Cliente registrado exitosamente");
+      }
+    } catch(e) {
+      toast.error("Error al guardar cliente");
+    } finally {
+      setSaving(false);
+      setFormOpen(false);
+      setEditingClient(null);
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
     }
-    setSaving(false);
-    setFormOpen(false);
-    setEditingClient(null);
-    queryClient.invalidateQueries({ queryKey: ["clients"] });
   };
 
   const handleNewAttention = async (form) => {
@@ -234,7 +239,7 @@ export default function Clients() {
     setSaving(false);
     setAttentionOpen(false);
     setAttentionClient(null);
-    toast.success(`Atención registrada — Sesión ${newSession}`);
+    toast.success(`AtenciÃ³n registrada â SesiÃ³n ${newSession}`);
     queryClient.invalidateQueries({ queryKey: ["clients"] });
   };
 
@@ -247,9 +252,9 @@ export default function Clients() {
         setFormOpen(true);
         break;
       case "agendar":
-        await clientApi.update(client.id, { estado: "Próxima sesión agendada" });
-        await triggerWebhooksForClient({ ...client, estado: "Próxima sesión agendada" }, "cambio_de_estado");
-        toast.success("Estado actualizado a 'Próxima sesión agendada'");
+        await clientApi.update(client.id, { estado: "PrÃ³xima sesiÃ³n agendada" });
+        await triggerWebhooksForClient({ ...client, estado: "PrÃ³xima sesiÃ³n agendada" }, "cambio_de_estado");
+        toast.success("Estado actualizado a 'PrÃ³xima sesiÃ³n agendada'");
         queryClient.invalidateQueries({ queryKey: ["clients"] });
         break;
       case "nueva_atencion":
@@ -268,13 +273,13 @@ export default function Clients() {
         queryClient.invalidateQueries({ queryKey: ["clients"] });
         break;
       case "no_continuo":
-        await clientApi.update(client.id, { estado: "No continuó" });
-        await triggerWebhooksForClient({ ...client, estado: "No continuó" }, "cambio_de_estado");
+        await clientApi.update(client.id, { estado: "No continuÃ³" });
+        await triggerWebhooksForClient({ ...client, estado: "No continuÃ³" }, "cambio_de_estado");
         toast.success("Estado actualizado");
         queryClient.invalidateQueries({ queryKey: ["clients"] });
         break;
       case "eliminar":
-        if (window.confirm(`¿Eliminar a ${client.nombre} ${client.apellido}? Esta acción no se puede deshacer.`)) {
+        if (window.confirm(`Â¿Eliminar a ${client.nombre} ${client.apellido}? Esta acciÃ³n no se puede deshacer.`)) {
           await clientApi.delete(client.id);
           toast.success("Cliente eliminado");
           queryClient.invalidateQueries({ queryKey: ["clients"] });
@@ -303,7 +308,7 @@ export default function Clients() {
           <TrendingUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <AlertDescription className="flex items-center justify-between">
             <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-              Filtrado por métrica del dashboard: <strong>{getMetricLabel()}</strong>
+              Filtrado por mÃ©trica del dashboard: <strong>{getMetricLabel()}</strong>
             </span>
             <Button 
               variant="ghost" 
